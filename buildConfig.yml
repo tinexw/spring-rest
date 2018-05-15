@@ -1,0 +1,11 @@
+piVersion: v1
+kind: BuildConfig
+metadata:
+  name: spring-rest-pipeline
+spec:
+  source:
+    git:
+      uri: "https://github.com/tinexw/spring-rest.git"
+      ref: "binary-build"
+  strategy:
+    jenkinsPipelineStrategy
