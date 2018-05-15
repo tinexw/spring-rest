@@ -1,11 +1,40 @@
-piVersion: v1
+apiVersion: v1
 kind: BuildConfig
 metadata:
-  name: spring-rest-pipeline
+  name: mavenapp-pipeline
 spec:
-  source:
-    git:
-      uri: "https://github.com/tinexw/spring-rest.git"
-      ref: "binary-build"
   strategy:
-    jenkinsPipelineStrategy
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        pipeline {
+          agent { label "maven" }
+          stages {
+            stage("Clone Source") {
+              steps {
+                checkout([$class: 'GitSCM',
+                            branches: [[name: '*/binary-build']],
+                            extensions: [
+                              [$class: 'RelativeTargetDirectory', relativeTargetDir: 'mavenapp']
+                            ],
+                            userRemoteConfigs: [[url: https://github.com/tinexw/spring-rest.git']]
+                        ])
+              }
+            }
+            stage("Build WAR") {
+              steps {
+                dir('mavenapp') {
+                  sh 'mvn clean package'
+                }
+              }
+            }
+            stage("Build Image") {
+              steps {
+                dir('mavenapp/target') {
+                  sh 'oc start-build mavenapp --from-dir . --follow'
+                }
+              }
+            }
+          }
+        }
+    type: JenkinsPipeline
+  triggers: []
