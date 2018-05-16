@@ -16,7 +16,7 @@ spec:
                             extensions: [
                               [$class: 'RelativeTargetDirectory', relativeTargetDir: 'mavenapp']
                             ],
-                            userRemoteConfigs: [[url: https://github.com/tinexw/spring-rest.git']]
+                            userRemoteConfigs: [[url: 'https://github.com/tinexw/spring-rest.git']]
                         ])
               }
             }
